@@ -1,0 +1,45 @@
+version: 2
+
+sources:
+  - name: amazon_raw
+    description: "Données brutes Amazon chargées par dlt"
+    tables:
+      - name: products
+        description: "Catalogue des produits Amazon"
+        columns:
+          - name: product_id
+            description: "Identifiant unique du produit"
+            tests:
+              - unique
+              - not_null
+          - name: title
+            description: "Nom du produit"
+          - name: price
+            description: "Prix du produit"
+          - name: category
+            description: "Catégorie du produit"
+          - name: rating
+            description: "Note moyenne du produit"
+          - name: reviews_count
+            description: "Nombre d'avis"
+            
+      - name: reviews
+        description: "Avis clients sur les produits"
+        columns:
+          - name: review_id
+            description: "Identifiant unique de l'avis"
+            tests:
+              - unique
+              - not_null
+          - name: product_id
+            description: "Référence vers le produit"
+            tests:
+              - not_null
+          - name: rating
+            description: "Note donnée par le client (1-5)"
+          - name: review_text
+            description: "Texte de l'avis"
+          - name: reviewer_name
+            description: "Nom du client"
+          - name: review_date
+            description: "Date de l'avis"

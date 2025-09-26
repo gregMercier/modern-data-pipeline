@@ -1,0 +1,38 @@
+name: dbt Tests
+
+on:
+  pull_request:
+    paths:
+      - 'dbt_project/**'
+      - 'dlt_pipelines/**'
+
+jobs:
+  dbt-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install dbt-core dbt-duckdb
+        
+    - name: dbt parse
+      run: |
+        cd dbt_project/amazon_analytics
+        dbt parse
+        
+    - name: dbt compile
+      run: |
+        cd dbt_project/amazon_analytics  
+        dbt compile
+        
+    - name: dbt test
+      run: |
+        cd dbt_project/amazon_analytics
+        dbt test --select source:*

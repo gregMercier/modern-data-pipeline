@@ -1,0 +1,38 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        
+    - name: Run production pipeline
+      run: |
+        cd dlt_pipelines
+        python amazon_products_pipeline.py
+        
+    - name: Deploy dbt to production
+      run: |
+        cd dbt_project/amazon_analytics
+        dbt run --target prod
+        dbt test --target prod
+        
+    - name: Notify deployment
+      run: |
+        echo "✅ Pipeline deployed to production"

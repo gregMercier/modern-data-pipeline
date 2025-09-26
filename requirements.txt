@@ -1,0 +1,6 @@
+dlt[duckdb]>=0.4.0
+dbt-core>=1.7.0
+dbt-duckdb>=1.7.0
+pandas>=2.0.0
+pyarrow>=14.0.0
+great-expectations>=0.18.0

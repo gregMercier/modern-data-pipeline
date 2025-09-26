@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
+
+# dbt
+dbt_project/logs/
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/.user.yml
+
+# dlt
+dlt_pipelines/.dlt/
+dlt_pipelines/pipeline.log
+
+# Docker
+.docker/
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Data files
+*.csv
+*.parquet
+*.json
+data/

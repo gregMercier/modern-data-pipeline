@@ -1,0 +1,59 @@
+name: Data Pipeline CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Exécution quotidienne à 6h UTC
+    - cron: '0 6 * * *'
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Install dbt dependencies
+      run: |
+        cd dbt_project/amazon_analytics
+        dbt deps
+        
+    - name: Test dlt pipeline
+      run: |
+        cd dlt_pipelines
+        python amazon_products_pipeline.py
+        
+    - name: Run dbt tests
+      run: |
+        cd dbt_project/amazon_analytics
+        dbt test
+        
+    - name: Run dbt models
+      run: |
+        cd dbt_project/amazon_analytics
+        dbt run
+        
+    - name: Generate dbt docs
+      run: |
+        cd dbt_project/amazon_analytics
+        dbt docs generate
+        
+    - name: Upload dbt docs
+      uses: actions/upload-artifact@v3
+      with:
+        name: dbt-docs
+        path: dbt_project/amazon_analytics/target/
